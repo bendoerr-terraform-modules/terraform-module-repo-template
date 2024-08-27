@@ -43,41 +43,44 @@ TODO
 
 ### Requirements
 
-| Name | Version | |------|---------| | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >=
-1.0.0 | | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| Name                                                                     | Version  |
+| ------------------------------------------------------------------------ | -------- |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws)                   | ~> 5.0   |
 
 ### Providers
 
-| Name | Version | |------|---------| | <a name="provider_aws"></a> [aws](#provider_aws) | 5.64.0 |
+| Name                                             | Version |
+| ------------------------------------------------ | ------- |
+| <a name="provider_aws"></a> [aws](#provider_aws) | 5.64.0  |
 
 ### Modules
 
-| Name | Source | Version | |------|--------|---------| | <a name="module_label"></a> [label](#module_label) |
-bendoerr-terraform-modules/label/null | 0.4.2 |
+| Name                                               | Source                                | Version |
+| -------------------------------------------------- | ------------------------------------- | ------- |
+| <a name="module_label"></a> [label](#module_label) | bendoerr-terraform-modules/label/null | 0.4.2   |
 
 ### Resources
 
-| Name | Type | |------|------| |
-[aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity)
-| data source |
+| Name                                                                                                                       | Type        |
+| -------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 
 ### Inputs
 
-| Name | Description | Type | Default | Required | |------|-------------|------|---------|:--------:| |
-<a name="input_context"></a> [context](#input_context) | Shared context from the
-'bendoerr-terraform-modules/terraform-null-context' module. | <pre>object({<br> attributes = list(string)<br>
-dns_namespace = string<br> environment = string<br> instance = string<br> instance_short = string<br> namespace =
-string<br> region = string<br> region_short = string<br> role = string<br> role_short = string<br> project = string<br>
-tags = map(string)<br> })</pre> | n/a | yes | | <a name="input_name"></a> [name](#input_name) | A descriptive but short
-name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string` | `"thing"` | no |
+| Name                                                   | Description                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                       | Default   | Required |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | :------: |
+| <a name="input_context"></a> [context](#input_context) | Shared context from the 'bendoerr-terraform-modules/terraform-null-context' module.                           | <pre>object({<br>    attributes     = list(string)<br>    dns_namespace  = string<br>    environment    = string<br>    instance       = string<br>    instance_short = string<br>    namespace      = string<br>    region         = string<br>    region_short   = string<br>    role           = string<br>    role_short     = string<br>    project        = string<br>    tags           = map(string)<br>  })</pre> | n/a       |   yes    |
+| <a name="input_name"></a> [name](#input_name)          | A descriptive but short name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string`                                                                                                                                                                                                                                                                                                                                                                                                                   | `"thing"` |    no    |
 
 ### Outputs
 
-| Name | Description | |------|-------------| | <a name="output_caller_identity"></a>
-[caller_identity](#output_caller_identity) | This can be removed if it is not needed | | <a name="output_id"></a>
-[id](#output_id) | The normalized ID from the 'bendoerr-terraform-modules/terraform-null-label' module. | |
-<a name="output_name"></a> [name](#output_name) | The provided name given to the module. | | <a name="output_tags"></a>
-[tags](#output_tags) | The normalized tags from the 'bendoerr-terraform-modules/terraform-null-label' module. |
+| Name                                                                             | Description                                                                            |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| <a name="output_caller_identity"></a> [caller_identity](#output_caller_identity) | This can be removed if it is not needed                                                |
+| <a name="output_id"></a> [id](#output_id)                                        | The normalized ID from the 'bendoerr-terraform-modules/terraform-null-label' module.   |
+| <a name="output_name"></a> [name](#output_name)                                  | The provided name given to the module.                                                 |
+| <a name="output_tags"></a> [tags](#output_tags)                                  | The normalized tags from the 'bendoerr-terraform-modules/terraform-null-label' module. |
 
 <!-- END_TF_DOCS -->
 
@@ -121,8 +124,7 @@ information.
 
 [<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/graphs/contributors)
 
-- **Benjamin R. Doerr** - _Terraformer_ - [Benjamin R. Doerr](https://github.com/bendoerr/) - _Built Ben's Terraform
-  Modules_
+- **Benjamin R. Doerr** - _Terraformer_ - [Benjamin R. Doerr](https://github.com/bendoerr/) - _Built Ben's  Terraform Modules_
 
 ## Supported Versions
 
