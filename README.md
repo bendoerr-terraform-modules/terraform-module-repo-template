@@ -1,9 +1,9 @@
 <br/>
 <p align="center">
-  <a href="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template">
+  <a href="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/raw/main/docs/logo-dark.png">
-      <img src="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/raw/main/docs/logo-light.png" alt="Logo">
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/raw/main/docs/logo-dark.png">
+      <img src="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/raw/main/docs/logo-light.png" alt="Logo">
     </picture>
   </a>
 
@@ -13,23 +13,23 @@
     This is how I do it.
     <br/>
     <br/>
-    <a href="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template"><strong>Explore the docs »</strong></a>
     <br/>
     <br/>
-    <a href="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues">Report Bug</a>
+    <a href="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues">Report Bug</a>
     .
-    <a href="https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues">Request Feature</a>
+    <a href="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues">Request Feature</a>
   </p>
 </p>
 
-[<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/graphs/contributors)
-[<img alt="GitHub issues" src="https://img.shields.io/github/issues/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues)
-[<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/pulls)
-[<img alt="GitHub workflow: Terratest" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-aws-repo-template/test.yml?logo=githubactions&label=terratest">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/actions/workflows/test.yml)
-[<img alt="GitHub workflow: Linting" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-aws-repo-template/lint.yml?logo=githubactions&label=linting">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/actions/workflows/lint.yml)
-[<img alt="GitHub tag (with filter)" src="https://img.shields.io/github/v/tag/bendoerr-terraform-modules/terraform-aws-repo-template?filter=v*&label=latest%20tag&logo=terraform">](https://registry.terraform.io/modules/bendoerr-terraform-modules/cloudfront-with-s3-origin/aws/latest)
-[<img alt="OSSF-Scorecard Score" src="https://img.shields.io/ossf-scorecard/github.com/bendoerr-terraform-modules/terraform-aws-repo-template?logo=securityscorecard&label=ossf%20scorecard&link=https%3A%2F%2Fsecurityscorecards.dev%2Fviewer%2F%3Furi%3Dgithub.com%2Fbendoerr-terraform-modules%2Fterraform-aws-repo-template">](https://securityscorecards.dev/viewer/?uri=github.com/bendoerr-terraform-modules/terraform-aws-repo-template)
-[<img alt="GitHub License" src="https://img.shields.io/github/license/bendoerr-terraform-modules/terraform-aws-repo-template?logo=opensourceinitiative">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/blob/main/LICENSE.txt)
+[<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/graphs/contributors)
+[<img alt="GitHub issues" src="https://img.shields.io/github/issues/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues)
+[<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/pulls)
+[<img alt="GitHub workflow: Terratest" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-module-repo-template/test.yml?logo=githubactions&label=terratest">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/actions/workflows/test.yml)
+[<img alt="GitHub workflow: Linting" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-module-repo-template/lint.yml?logo=githubactions&label=linting">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/actions/workflows/lint.yml)
+[<img alt="GitHub tag (with filter)" src="https://img.shields.io/github/v/tag/bendoerr-terraform-modules/terraform-module-repo-template?filter=v*&label=latest%20tag&logo=terraform">](https://registry.terraform.io/modules/bendoerr-terraform-modules/cloudfront-with-s3-origin/aws/latest)
+[<img alt="OSSF-Scorecard Score" src="https://img.shields.io/ossf-scorecard/github.com/bendoerr-terraform-modules/terraform-module-repo-template?logo=securityscorecard&label=ossf%20scorecard&link=https%3A%2F%2Fsecurityscorecards.dev%2Fviewer%2F%3Furi%3Dgithub.com%2Fbendoerr-terraform-modules%2Fterraform-module-repo-template">](https://securityscorecards.dev/viewer/?uri=github.com/bendoerr-terraform-modules/terraform-module-repo-template)
+[<img alt="GitHub License" src="https://img.shields.io/github/license/bendoerr-terraform-modules/terraform-module-repo-template?logo=opensourceinitiative">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/blob/main/LICENSE.txt)
 
 ## About The Project
 
@@ -86,20 +86,20 @@ TODO
 
 ## Roadmap
 
-[<img alt="GitHub issues" src="https://img.shields.io/github/issues/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues)
+[<img alt="GitHub issues" src="https://img.shields.io/github/issues/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues)
 
-See the [open issues](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues) for a list of
+See the [open issues](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues) for a list of
 proposed features (and known issues).
 
 ## Contributing
 
-[<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/pulls)
+[<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/pulls)
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
 contributions you make are **greatly appreciated**.
 
 - If you have suggestions for adding or removing projects, feel free to
-  [open an issue](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/issues/new) to discuss it,
+  [open an issue](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/issues/new) to discuss it,
   or directly create a pull request after you edit the _README.md_ file with necessary changes.
 - Please make sure you check your spelling and grammar.
 - Create individual PR for each suggestion.
@@ -114,15 +114,15 @@ contributions you make are **greatly appreciated**.
 
 ## License
 
-[<img alt="GitHub License" src="https://img.shields.io/github/license/bendoerr-terraform-modules/terraform-aws-repo-template?logo=opensourceinitiative">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/blob/main/LICENSE.txt)
+[<img alt="GitHub License" src="https://img.shields.io/github/license/bendoerr-terraform-modules/terraform-module-repo-template?logo=opensourceinitiative">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/blob/main/LICENSE.txt)
 
 Distributed under the MIT License. See
-[LICENSE](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/blob/main/LICENSE.txt) for more
+[LICENSE](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/blob/main/LICENSE.txt) for more
 information.
 
 ## Authors
 
-[<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-aws-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-aws-repo-template/graphs/contributors)
+[<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/graphs/contributors)
 
 - **Benjamin R. Doerr** - _Terraformer_ - [Benjamin R. Doerr](https://github.com/bendoerr/) - _Built Ben's  Terraform Modules_
 
