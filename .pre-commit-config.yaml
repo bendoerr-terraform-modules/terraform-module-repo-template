@@ -50,17 +50,24 @@ repos:
     rev: f295829140d25717bc79368d3f966fc1f67a824f # frozen: v0.41.0
     hooks:
       - id: markdownlint-fix-docker
-#  - repo: https://github.com/terraform-docs/terraform-docs
-#    rev: 2a6efef6469c3ebb961a3e1388639573d886bfbb # frozen: v0.18.0
-#    hooks:
-#      - id: terraform-docs-system
-#        args:
-#          [
-#            "markdown",
-#            "--output-file",
-#            "README.md",
-#            "--hide-empty",
-#            "--indent",
-#            "3",
-#            ".",
-#          ]
+
+  #  - repo: https://github.com/terraform-docs/terraform-docs
+  #    rev: 2a6efef6469c3ebb961a3e1388639573d886bfbb # frozen: v0.18.0
+  #    hooks:
+  #      - id: terraform-docs-system
+  #        args:
+  #          [
+  #            "markdown",
+  #            "--output-file",
+  #            "README.md",
+  #            "--hide-empty",
+  #            "--indent",
+  #            "3",
+  #            ".",
+  #          ]
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: c2e095c022a97360f7fff5d49fbc11f273be929a # frozen: v1.60.3
+    hooks:
+      - id: golangci-lint-full
+        entry: bash -c 'cd test && golangci-lint run --fix'
