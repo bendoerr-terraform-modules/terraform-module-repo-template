@@ -45,7 +45,6 @@ repos:
     rev: 08fba30538869a440b5059de90af03e3502e35fb # frozen: 0.7.17
     hooks:
       - id: mdformat
-        args: ["--wrap", "120"]
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: f295829140d25717bc79368d3f966fc1f67a824f # frozen: v0.41.0
