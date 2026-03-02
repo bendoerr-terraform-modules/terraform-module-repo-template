@@ -39,6 +39,10 @@ TODO
 
 TODO
 
+> 📖 **New to this org?** Read the
+> [Module Usage Guide](MODULE-USAGE-GUIDE.md) to understand the context/label
+> naming pattern used across all modules.
+
 <!-- BEGIN_TF_DOCS -->
 
 ### Requirements
