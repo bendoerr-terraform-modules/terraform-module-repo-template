@@ -43,33 +43,33 @@ Every module in this org follows a two-layer naming pattern:
 
 The flow looks like this:
 
-```
-┌─────────────────────────────┐
-│   Root Module / Terragrunt  │
-│                             │
-│   module "context" {        │
-│     source = "...context"   │
-│     namespace  = "brd"      │
-│     role       = "production│"
-│     region     = "us-east-1"│
-│   }                         │
-└──────────┬──────────────────┘
+```text
+┌─────────────────────────────────┐
+│   Root Module / Terragrunt      │
+│                                 │
+│   module "context" {            │
+│     source = "...context"       │
+│     namespace  = "brd"          │
+│     role       = "production"   │
+│     region     = "us-east-1"    │
+│   }                             │
+└──────────┬──────────────────────┘
            │ context.shared (object)
            ▼
-┌─────────────────────────────┐
-│   Your Module               │
-│                             │
-│   variable "context" {}     │  ← receives the shared context
-│                             │
-│   module "label" {          │
-│     source  = "...label"    │
-│     context = var.context   │  ← passes context through
-│     name    = "my-bucket"   │  ← adds a resource-specific name
-│   }                         │
-│                             │
-│   module.label.id   →       │  "brd-prod-ue1-my-bucket"
-│   module.label.tags →       │  { Role = "production", ... }
-└─────────────────────────────┘
+┌─────────────────────────────────┐
+│   Your Module                   │
+│                                 │
+│   variable "context" {}         │  ← receives the shared context
+│                                 │
+│   module "label" {              │
+│     source  = "...label"        │
+│     context = var.context       │  ← passes context through
+│     name    = "my-bucket"       │  ← adds a resource-specific name
+│   }                             │
+│                                 │
+│   module.label.id   →           │  "brd-prod-ue1-my-bucket"
+│   module.label.tags →           │  { Role = "production", ... }
+└─────────────────────────────────┘
 ```
 
 ### Step 1: Create the Context
@@ -158,18 +158,18 @@ The label module wraps
 [cloudposse/label/null](https://github.com/cloudposse/terraform-null-label)
 under the hood, mapping the context fields to Cloud Posse's label inputs:
 
-| Context Field   | Label Input     | Example         |
-| --------------- | --------------- | --------------- |
-| `namespace`     | `namespace`     | `brd`           |
-| `environment`   | `environment`   | `prod-ue1`      |
-| `project`       | `stage`         | `web-app`       |
-| `name` (param)  | `name`          | `api`           |
-| `attributes`    | `attributes`    | `["blue"]`      |
-| `tags`          | `tags`          | `{Role = ...}`  |
+| Context Field  | Label Input   | Example        |
+| -------------- | ------------- | -------------- |
+| `namespace`    | `namespace`   | `brd`          |
+| `environment`  | `environment` | `prod-ue1`     |
+| `project`      | `stage`       | `web-app`      |
+| `name` (param) | `name`        | `api`          |
+| `attributes`   | `attributes`  | `["blue"]`     |
+| `tags`         | `tags`        | `{Role = ...}` |
 
 The resulting `module.label.id` follows the pattern:
 
-```
+```text
 <namespace>-<environment>-<project>-<name>(-<attributes>)
 brd-prod-ue1-web-app-api
 brd-prod-ue1-web-app-api-blue    # with attributes
@@ -194,8 +194,7 @@ module "context" {
 }
 
 module "assets_bucket" {
-  source  = "bendoerr-terraform-modules/s3-bucket/aws"
-  version = "1.0.0"
+  source = "./modules/s3-bucket" # the module you build from this template
 
   context = module.context.shared
   name    = "assets"
@@ -261,7 +260,7 @@ output "tags" {
 
 **What the caller sees:**
 
-```
+```text
 module.assets_bucket.id   = "brd-prod-ue1-media-assets"
 module.assets_bucket.tags = {
   Instance  = ""
@@ -280,20 +279,20 @@ module.assets_bucket.tags = {
 Every module **must** declare a `context` variable with the exact object type
 shown above. This is the contract between modules.
 
-| Field            | Type           | Purpose                                       |
-| ---------------- | -------------- | --------------------------------------------- |
-| `namespace`      | `string`       | Global uniqueness prefix (e.g., initials)     |
-| `environment`    | `string`       | Computed: `<role_short>-<region_short>`        |
-| `role`           | `string`       | Account role: `production`, `development`     |
-| `role_short`     | `string`       | Auto-shortened role: `prod`, `dev`            |
-| `region`         | `string`       | Full region: `us-east-1`                      |
-| `region_short`   | `string`       | Auto-shortened region: `ue1`                  |
-| `instance`       | `string`       | Optional: blue/green or tenant identifier     |
-| `instance_short` | `string`       | Auto-shortened instance                       |
-| `project`        | `string`       | Project or application name                   |
-| `dns_namespace`  | `string`       | DNS-friendly namespace fragment               |
-| `attributes`     | `list(string)` | Additional ID segments                        |
-| `tags`           | `map(string)`  | Additional tags merged into all resources      |
+| Field            | Type           | Purpose                                   |
+| ---------------- | -------------- | ----------------------------------------- |
+| `namespace`      | `string`       | Global uniqueness prefix (e.g., initials) |
+| `environment`    | `string`       | Computed: `<role_short>-<region_short>`   |
+| `role`           | `string`       | Account role: `production`, `development` |
+| `role_short`     | `string`       | Auto-shortened role: `prod`, `dev`        |
+| `region`         | `string`       | Full region: `us-east-1`                  |
+| `region_short`   | `string`       | Auto-shortened region: `ue1`              |
+| `instance`       | `string`       | Optional: blue/green or tenant identifier |
+| `instance_short` | `string`       | Auto-shortened instance                   |
+| `project`        | `string`       | Project or application name               |
+| `dns_namespace`  | `string`       | DNS-friendly namespace fragment           |
+| `attributes`     | `list(string)` | Additional ID segments                    |
+| `tags`           | `map(string)`  | Additional tags merged into all resources |
 
 ### The `name` Variable
 
@@ -341,7 +340,7 @@ module "child" {
 
 The label module also produces a `dns_name` output:
 
-```
+```text
 <name>.<project>.<dns_namespace>
 assets.media.ue1
 ```
