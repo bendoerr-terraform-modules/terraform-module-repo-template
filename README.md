@@ -39,6 +39,10 @@ TODO
 
 TODO
 
+> 📖 **New to this org?** Read the
+> [Module Usage Guide](MODULE-USAGE-GUIDE.md) to understand the context/label
+> naming pattern used across all modules.
+
 <!-- BEGIN_TF_DOCS -->
 
 ### Requirements
@@ -68,10 +72,10 @@ TODO
 
 ### Inputs
 
-| Name                                                   | Description                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                       | Default   | Required |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | :------: |
-| <a name="input_context"></a> [context](#input_context) | Shared context from the 'bendoerr-terraform-modules/terraform-null-context' module.                           | <pre>object({<br>    attributes     = list(string)<br>    dns_namespace  = string<br>    environment    = string<br>    instance       = string<br>    instance_short = string<br>    namespace      = string<br>    region         = string<br>    region_short   = string<br>    role           = string<br>    role_short     = string<br>    project        = string<br>    tags           = map(string)<br>  })</pre> | n/a       |   yes    |
-| <a name="input_name"></a> [name](#input_name)          | A descriptive but short name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string`                                                                                                                                                                                                                                                                                                                                                                                                                   | `"thing"` |    no    |
+| Name                                                   | Description                                                                                                   | Type                                                                                                                                                                                                                                                                                                                      | Default   | Required |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | :------: |
+| <a name="input_context"></a> [context](#input_context) | Shared context from the 'bendoerr-terraform-modules/terraform-null-context' module.                           | <pre>object({<br> attributes = list(string)<br> dns_namespace = string<br> environment = string<br> instance = string<br> instance_short = string<br> namespace = string<br> region = string<br> region_short = string<br> role = string<br> role_short = string<br> project = string<br> tags = map(string)<br> })</pre> | n/a       |   yes    |
+| <a name="input_name"></a> [name](#input_name)          | A descriptive but short name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string`                                                                                                                                                                                                                                                                                                                  | `"thing"` |    no    |
 
 ### Outputs
 
@@ -124,7 +128,7 @@ information.
 
 [<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/graphs/contributors)
 
-- **Benjamin R. Doerr** - _Terraformer_ - [Benjamin R. Doerr](https://github.com/bendoerr/) - _Built Ben's  Terraform Modules_
+- **Benjamin R. Doerr** - _Terraformer_ - [Benjamin R. Doerr](https://github.com/bendoerr/) - _Built Ben's Terraform Modules_
 
 ## Supported Versions
 
