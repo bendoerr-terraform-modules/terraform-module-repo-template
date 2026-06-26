@@ -187,6 +187,10 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          # No git operations after checkout (pip install + mdformat --check only),
+          # so the repo token must not linger in .git/config.
+          persist-credentials: false
 
       # mdformat (frozen 0.7.17, same version as the pre-commit hook) is the
       # org's authoritative markdown formatter — prettier is excluded from
@@ -209,6 +213,10 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          # Only local git reads (git diff) after checkout — no pushes — so the
+          # repo token must not linger in .git/config.
+          persist-credentials: false
 
       # Regenerate the README terraform-docs block the same way the pre-commit
       # hook does (v0.24.0, --indent 3) and fail if it drifts from what is
