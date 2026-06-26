@@ -2,9 +2,3 @@ default: true
 MD033: false
 MD013: false
 MD041: false
-# mdformat (the org's authoritative markdown formatter) normalizes emphasis to
-# underscore; declare underscore the canonical style so MD049 stops flagging
-# mdformat-clean prose as inconsistent (default is "consistent", which trips
-# when generated/HTML content earlier in the file uses asterisk emphasis).
-MD049:
-  style: underscore
