@@ -61,6 +61,8 @@ repos:
           [
             "markdown",
             "table",
+            "--indent",
+            "3",
             "--output-file",
             "README.md",
             "--output-mode",

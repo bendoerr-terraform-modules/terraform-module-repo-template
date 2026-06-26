@@ -84,8 +84,11 @@ jobs:
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: create package.json
+        # Pinned exact (not a floating ^range): a prettier minor bump must not
+        # silently reformat the tree out from under contributors. Markdown is
+        # excluded from prettier via .prettierignore — mdformat owns it.
         run: |
-          echo -e '{"devDependencies": {"prettier": "^3.1.0"}}' > package.json
+          echo -e '{"devDependencies": {"prettier": "3.3.3"}}' > package.json
       - name: prettier
         uses: EPMatt/reviewdog-action-prettier@f691104cbeb4b0299df971275444c64be93c03ae # v1.3.0
         with:
@@ -187,9 +190,10 @@ jobs:
 
       # Regenerate the README terraform-docs block the same way the pre-commit
       # hook does (v0.24.0, --indent 3) and fail if it drifts from what is
-      # committed. The block is terraform-docs output that is then prettier'd,
-      # so we run prettier too before comparing — otherwise the compact
-      # terraform-docs output would never match the formatted file.
+      # committed. The block is terraform-docs output that is then run through
+      # mdformat (the org's authoritative markdown formatter — prettier is kept
+      # off markdown via .prettierignore), matching the pre-commit hook chain,
+      # so we run mdformat too before comparing.
       - name: Install terraform-docs
         env:
           TERRAFORM_DOCS_VERSION: v0.24.0
@@ -201,12 +205,16 @@ jobs:
       - name: Regenerate terraform-docs block
         run: terraform-docs markdown table --indent 3 --output-file README.md --output-mode inject .
 
-      - name: Normalize with prettier
-        run: npx --yes prettier@^3.1.0 --write README.md
+      - name: Normalize with mdformat
+        # mdformat pinned to the same version as the pre-commit hook (frozen 0.7.17)
+        # so CI and local pre-commit produce byte-identical markdown.
+        run: |
+          python3 -m pip install --quiet 'mdformat==0.7.17'
+          python3 -m mdformat README.md
 
       - name: Fail on drift
         run: |
           if ! git diff --exit-code -- README.md; then
-            echo "::error file=README.md::terraform-docs output is out of date. Run the pre-commit terraform-docs hook (markdown table --indent 3) and prettier, then commit README.md."
+            echo "::error file=README.md::terraform-docs output is out of date. Run the pre-commit terraform-docs hook (markdown table --indent 3) and mdformat, then commit README.md."
             exit 1
           fi

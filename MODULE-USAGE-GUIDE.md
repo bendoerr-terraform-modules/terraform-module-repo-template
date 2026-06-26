@@ -23,7 +23,7 @@ Every module in this org follows a two-layer naming pattern:
    are, where you're deploying, and what role the account plays. Think of it as
    the "identity" of your deployment.
 
-2. **`terraform-null-label`** — Takes that context and a resource `name` to
+1. **`terraform-null-label`** — Takes that context and a resource `name` to
    produce a unique, consistent ID and a standard set of tags. Think of it as
    the "name tag factory."
 
@@ -411,8 +411,7 @@ enrichment.
 
 ### Label Validation Failures
 
-**Symptom:** `name must contain only lowercase alphanumeric characters and
-hyphens`
+**Symptom:** `name must contain only lowercase alphanumeric characters and hyphens`
 
 **Fix:** The `name` variable is validated by the label module. Use only
 lowercase letters, numbers, and hyphens. No underscores, spaces, or uppercase.
