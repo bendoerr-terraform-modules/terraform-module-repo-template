@@ -50,19 +50,19 @@ TODO
 | Name                                                                     | Version  |
 | ------------------------------------------------------------------------ | -------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws)                   | ~> 5.0   |
+| <a name="requirement_aws"></a> [aws](#requirement_aws)                   | ~> 6.10  |
 
 ### Providers
 
 | Name                                             | Version |
 | ------------------------------------------------ | ------- |
-| <a name="provider_aws"></a> [aws](#provider_aws) | 5.64.0  |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 6.10 |
 
 ### Modules
 
 | Name                                               | Source                                | Version |
 | -------------------------------------------------- | ------------------------------------- | ------- |
-| <a name="module_label"></a> [label](#module_label) | bendoerr-terraform-modules/label/null | 0.4.2   |
+| <a name="module_label"></a> [label](#module_label) | bendoerr-terraform-modules/label/null | 1.0.0   |
 
 ### Resources
 
@@ -72,10 +72,10 @@ TODO
 
 ### Inputs
 
-| Name                                                   | Description                                                                                                   | Type                                                                                                                                                                                                                                                                                                                      | Default   | Required |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | :------: |
-| <a name="input_context"></a> [context](#input_context) | Shared context from the 'bendoerr-terraform-modules/terraform-null-context' module.                           | <pre>object({<br> attributes = list(string)<br> dns_namespace = string<br> environment = string<br> instance = string<br> instance_short = string<br> namespace = string<br> region = string<br> region_short = string<br> role = string<br> role_short = string<br> project = string<br> tags = map(string)<br> })</pre> | n/a       |   yes    |
-| <a name="input_name"></a> [name](#input_name)          | A descriptive but short name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string`                                                                                                                                                                                                                                                                                                                  | `"thing"` |    no    |
+| Name                                                   | Description                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                   | Default   | Required |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | :------: |
+| <a name="input_context"></a> [context](#input_context) | Shared context from the 'bendoerr-terraform-modules/terraform-null-context' module.                           | <pre>object({<br/> attributes = list(string)<br/> dns_namespace = string<br/> environment = string<br/> instance = string<br/> instance_short = string<br/> namespace = string<br/> region = string<br/> region_short = string<br/> role = string<br/> role_short = string<br/> project = string<br/> tags = map(string)<br/> })</pre> | n/a       |   yes    |
+| <a name="input_name"></a> [name](#input_name)          | A descriptive but short name used for labels by the 'bendoerr-terraform-modules/terraform-null-label' module. | `string`                                                                                                                                                                                                                                                                                                                               | `"thing"` |    no    |
 
 ### Outputs
 
