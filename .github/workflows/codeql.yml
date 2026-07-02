@@ -1,0 +1,30 @@
+# Thin caller -> reusable CodeQL in bendoerr-terraform-modules/workflows.
+# CodeQL is the org's ONE required gate (the `code_scanning` ruleset rule, which keys on the SARIF
+# tool name `CodeQL` that codeql-action/analyze uploads — not a check-run name). GATE-DEFINER ->
+# SHA-pinned (not @v1): a bad push to the reusable must never be able to break the merge gate org-wide.
+#
+# Triggers push + pull_request + schedule so analysis runs on PR heads -> code_scanning resolves on
+# real signal, not staleness off the last main run. Caller MUST grant security-events: write (perms are
+# caller-capped) or the SARIF upload 403s and the gate never resolves. Rides reusable defaults
+# (actions+go matrix, test/go.mod, egress).
+name: CodeQL Advanced
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "19 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    uses: bendoerr-terraform-modules/workflows/.github/workflows/codeql.yml@c2b51a26bb2c70baa655258fd44741345e4c9e95
