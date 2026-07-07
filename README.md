@@ -62,7 +62,7 @@ TODO
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_label"></a> [label](#module_label) | bendoerr-terraform-modules/label/null | 1.0.0 |
+| <a name="module_label"></a> [label](#module_label) | bendoerr-terraform-modules/label/null | 1.0.1 |
 
 ### Resources
 
