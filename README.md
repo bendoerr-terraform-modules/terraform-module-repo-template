@@ -1,3 +1,23 @@
+<!--
+  NEW REPO PAPERWORK — after creating a repo from this template, do ALL of these.
+  CI job `paperwork` (lint.yml) fails your repo until every item is done:
+    1. Replace every `terraform-module-repo-template` self-reference in this README
+       with your repo's name — there are 20+ lines: both logo srcset URLs, the
+       explore-docs / report-bug / request-feature links, and every badge URL. CI
+       lists each one it finds; that's the checklist working, not CI breaking.
+    2. Item 1's rename points the latest-tag badge's link at your repo's tags page.
+       Leave it there: /tags is derived from the repo (rename-safe, valid from birth),
+       while a hand-written registry URL is a cross-reference no CI can check — the
+       org has already had one rot invisibly after a module rename.
+    3. Replace TEMPLATE_TODO_ABOUT and TEMPLATE_TODO_USAGE below with real prose.
+    4. Update `role` in examples/simple/ctx.tf to your module's name.
+    5. Rename the Go module path in test/go.mod (and the goimports local-prefixes in
+       test/.golangci.yml) to your repo's name — CI enforces both.
+    6. Want a "born from the template" attribution? Put it in docs/ — this README
+       stays self-reference-free (CI enforces it).
+    7. Delete this comment block.
+-->
+
 <br/>
 <p align="center">
   <a href="https://github.com/bendoerr-terraform-modules/terraform-module-repo-template">
@@ -27,17 +47,17 @@
 [<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/bendoerr-terraform-modules/terraform-module-repo-template?logo=github">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/pulls)
 [<img alt="GitHub workflow: Terratest" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-module-repo-template/test.yml?logo=githubactions&label=terratest">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/actions/workflows/test.yml)
 [<img alt="GitHub workflow: Linting" src="https://img.shields.io/github/actions/workflow/status/bendoerr-terraform-modules/terraform-module-repo-template/lint.yml?logo=githubactions&label=linting">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/actions/workflows/lint.yml)
-[<img alt="GitHub tag (with filter)" src="https://img.shields.io/github/v/tag/bendoerr-terraform-modules/terraform-module-repo-template?filter=v*&label=latest%20tag&logo=terraform">](https://registry.terraform.io/modules/bendoerr-terraform-modules/cloudfront-with-s3-origin/aws/latest)
+[<img alt="GitHub tag (with filter)" src="https://img.shields.io/github/v/tag/bendoerr-terraform-modules/terraform-module-repo-template?filter=v*&label=latest%20tag&logo=terraform">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/tags)
 [<img alt="OSSF-Scorecard Score" src="https://img.shields.io/ossf-scorecard/github.com/bendoerr-terraform-modules/terraform-module-repo-template?logo=securityscorecard&label=ossf%20scorecard&link=https%3A%2F%2Fsecurityscorecards.dev%2Fviewer%2F%3Furi%3Dgithub.com%2Fbendoerr-terraform-modules%2Fterraform-module-repo-template">](https://securityscorecards.dev/viewer/?uri=github.com/bendoerr-terraform-modules/terraform-module-repo-template)
 [<img alt="GitHub License" src="https://img.shields.io/github/license/bendoerr-terraform-modules/terraform-module-repo-template?logo=opensourceinitiative">](https://github.com/bendoerr-terraform-modules/terraform-module-repo-template/blob/main/LICENSE.txt)
 
 ## About The Project
 
-TODO
+TEMPLATE_TODO_ABOUT: what this module builds and why it exists.
 
 ## Usage
 
-TODO
+TEMPLATE_TODO_USAGE: a minimal terraform snippet wiring this module to context/label (see MODULE-USAGE-GUIDE.md).
 
 > 📖 **New to this org?** Read the
 > [Module Usage Guide](MODULE-USAGE-GUIDE.md) to understand the context/label
@@ -49,7 +69,7 @@ TODO
 
 | Name | Version |
 | ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.10 |
 
 ### Providers

@@ -1,4 +1,4 @@
-module github.com/bendoerr-terraform-modules/terraform-aws-module-template/test
+module github.com/bendoerr-terraform-modules/terraform-module-repo-template/test
 
 go 1.26.0
 
