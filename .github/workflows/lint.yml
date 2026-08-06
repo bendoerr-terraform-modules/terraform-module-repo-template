@@ -46,12 +46,12 @@ jobs:
           if [ -n "$todos" ]; then
             echo "::error::unfilled template placeholders remain"; echo "$todos"; fail=1
           fi
-          # Substring 'repo-template' is INTENTIONALLY loose: it catches both the full
-          # repo name in README URLs and ctx.tf's shorter role string
-          # ("terraform-aws-repo-template"); the full name would miss the latter. A
-          # child legitimately named *repo-template* would trip this forever — change
-          # the needle if that day ever comes.
-          selfrefs=$(git grep -n 'repo-template' -- README.md '*.tf' || true)
+          # Substring 'repo-template' is INTENTIONALLY loose: it catches the full repo
+          # name in README URLs and test/go.mod's module path, plus ctx.tf's shorter
+          # role string ("terraform-aws-repo-template"); the full name would miss the
+          # latter. A child legitimately named *repo-template* would trip this forever
+          # — change the needle if that day ever comes.
+          selfrefs=$(git grep -n 'repo-template' -- README.md '*.tf' test/go.mod || true)
           if [ -n "$selfrefs" ]; then
             echo "::error::template self-references remain (badges/links/example role still point at the template)"; echo "$selfrefs"; fail=1
           fi
