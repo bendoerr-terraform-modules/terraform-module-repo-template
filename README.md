@@ -12,7 +12,7 @@
     3. Replace TEMPLATE_TODO_ABOUT and TEMPLATE_TODO_USAGE below with real prose.
     4. Update `role` in examples/simple/ctx.tf to your module's name.
     5. Rename the Go module path in test/go.mod (and the goimports local-prefixes in
-       test/.golangci.yml) to your repo's name — CI enforces the former.
+       test/.golangci.yml) to your repo's name — CI enforces both.
     6. Want a "born from the template" attribution? Put it in docs/ — this README
        stays self-reference-free (CI enforces it).
     7. Delete this comment block.
