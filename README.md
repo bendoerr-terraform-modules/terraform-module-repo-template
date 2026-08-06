@@ -6,10 +6,10 @@
        explore-docs / report-bug / request-feature links, and every badge URL. CI
        lists each one it finds; that's the checklist working, not CI breaking.
     2. The latest-tag badge renders your newest git tag; item 1's rename points its
-       link at your repo's tags page, which is correct from birth. Org convention for
-       a PUBLISHED module is linking your registry listing instead — if you re-point
-       it, copy the URL from the registry itself: a wrong-module registry URL passes
-       CI silently.
+       link at your repo's tags page — valid from birth. Once your module is published
+       you may re-point it at YOUR module's registry listing instead; copy the URL
+       from the registry itself and never link another module's page — a wrong-module
+       registry URL passes CI silently.
     3. Replace TEMPLATE_TODO_ABOUT and TEMPLATE_TODO_USAGE below with real prose.
     4. Update `role` in examples/simple/ctx.tf to your module's name.
     5. Want a "born from the template" attribution? Put it in docs/ — this README
