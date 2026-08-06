@@ -64,7 +64,7 @@ TEMPLATE_TODO_USAGE: a minimal terraform snippet wiring this module to context/l
 
 | Name | Version |
 | ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.10 |
 
 ### Providers
