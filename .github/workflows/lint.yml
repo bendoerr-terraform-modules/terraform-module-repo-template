@@ -44,7 +44,7 @@ jobs:
           fail=0
           todos=$(git grep -n 'TEMPLATE_TODO_' -- ':!.github' || true)
           if [ -n "$todos" ]; then
-            echo "::error::unfilled template placeholders remain"; echo "$todos"; fail=1
+            echo "::error::unfilled template placeholders remain — complete the new-repo checklist at the top of terraform-module-repo-template's README"; echo "$todos"; fail=1
           fi
           # Substring 'repo-template' is INTENTIONALLY loose: it catches the full repo
           # name (README URLs, test/go.mod, test/.golangci.yml) AND ctx.tf's shorter
@@ -55,6 +55,6 @@ jobs:
           # this forever — change the needle if that day ever comes.
           selfrefs=$(git grep -n 'repo-template' -- ':!.github' || true)
           if [ -n "$selfrefs" ]; then
-            echo "::error::template self-references remain (badges/links/example role still point at the template)"; echo "$selfrefs"; fail=1
+            echo "::error::template self-references remain (badges/links/example role still point at the template) — see the new-repo checklist at the top of terraform-module-repo-template's README"; echo "$selfrefs"; fail=1
           fi
           exit $fail
