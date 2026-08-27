@@ -38,23 +38,81 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: "Template paperwork done?"
+      - name: "Scan for template paperwork (the scanner must be able to look)"
+        id: scan
+        env:
+          PAPERWORK_FINDINGS: ${{ runner.temp }}/paperwork-findings.txt
         run: |
-          set -euo pipefail
-          fail=0
-          todos=$(git grep -n 'TEMPLATE_TODO_' -- ':!.github' || true)
-          if [ -n "$todos" ]; then
-            echo "::error::unfilled template placeholders remain — complete the new-repo checklist at the top of terraform-module-repo-template's README"; echo "$todos"; fail=1
+          set -uo pipefail
+          .github/scripts/paperwork-check.sh; rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          # Enumerate the WHOLE space, never the complement of one value. A missing or
+          # non-executable script returns 127, and `[ "$rc" -ne 2 ]` would let that exit 0 -
+          # the gate would go green with no script at all.
+          case "$rc" in
+            0 | 1) exit 0 ;;
+            2) echo "::error::the paperwork scanner could not look; this is NOT a clean result"; exit 1 ;;
+            *) echo "::error::paperwork scanner exited $rc - it did not run (missing? not executable?)"; exit 1 ;;
+          esac
+      - name: "Template paperwork done?"
+        if: steps.scan.outputs.rc == '0' || steps.scan.outputs.rc == '1'
+        env:
+          PAPERWORK_FINDINGS: ${{ runner.temp }}/paperwork-findings.txt
+          RC: ${{ steps.scan.outputs.rc }}
+        run: |
+          set -uo pipefail
+          # THE HANDOFF IS ASSERTED, NOT TRUSTED. A scanner that greens without writing its
+          # paperwork hands this step nothing, and green + green is the hole. Both halves would
+          # now have to lie in agreement.
+          if [ ! -f "$PAPERWORK_FINDINGS" ]; then
+            echo "::error::scanner exited $RC but wrote no findings file - the handoff is broken"
+            exit 1
           fi
-          # Substring 'repo-template' is INTENTIONALLY loose: it catches the full repo
-          # name (README URLs, test/go.mod, test/.golangci.yml) AND ctx.tf's shorter
-          # role string ("terraform-aws-repo-template"); the full name would miss the
-          # latter. Scope is a DENYLIST like its sibling above — an allowlist of
-          # expected files needed hand-extending twice in one morning; the name goes
-          # wherever it likes. A child legitimately named *repo-template* would trip
-          # this forever — change the needle if that day ever comes.
-          selfrefs=$(git grep -n 'repo-template' -- ':!.github' || true)
-          if [ -n "$selfrefs" ]; then
-            echo "::error::template self-references remain (badges/links/example role still point at the template) — see the new-repo checklist at the top of terraform-module-repo-template's README"; echo "$selfrefs"; fail=1
+          if [ "$RC" = "0" ] && [ -s "$PAPERWORK_FINDINGS" ]; then
+            echo "::error::scanner reported CLEAN but the findings file is non-empty - contradictory"
+            exit 1
           fi
-          exit $fail
+          if [ "$RC" = "1" ]; then
+            if [ ! -s "$PAPERWORK_FINDINGS" ]; then
+              echo "::error::scanner reported FINDINGS but the findings file is empty - contradictory"
+              exit 1
+            fi
+            echo "::error::template paperwork is incomplete - complete the new-repo checklist at the top of terraform-module-repo-template's README"
+            cat "$PAPERWORK_FINDINGS"
+            exit 1
+          fi
+          echo "paperwork verified: scanner reported CLEAN and the findings file is empty"
+
+  paperwork-selftest:
+    # NO `if:` - this runs in the template too, which is the entire point. The paperwork job above
+    # is skipped here, so without this the gate's logic is never executed in the repo that owns it,
+    # and a skipped job reports as `skipped`, which every green-check reading treats as non-failing.
+    # A fixture is not the repo it runs in.
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Harden Runner"
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+      - name: "Checkout"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: "Paperwork gate honours its exit contract"
+        run: .github/scripts/paperwork-selftest.sh
+      - name: "The .github exclusion still holds (the scripts must not match themselves)"
+        run: |
+          set -uo pipefail
+          # LOAD-BEARING: paperwork-check.sh contains the needles it searches for, and is safe only
+          # because ':!.github' excludes it. If that ever stops being true the gate matches its own
+          # definition and fails forever. This was a stated constraint with nothing verifying it.
+          hits=$(git grep -l 'TEMPLATE_TODO_' -- ':!.github' | grep '^\.github/' | grep -c . || true)
+          if [ "$hits" -ne 0 ]; then
+            echo "::error::the ':!.github' exclusion no longer holds - the paperwork scripts are inside their own search scope"
+            git grep -l 'TEMPLATE_TODO_' -- ':!.github' | grep '^\.github/'
+            exit 1
+          fi
+          echo "exclusion holds: no .github/ path is inside the gate's own scope"
