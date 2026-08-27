@@ -99,7 +99,11 @@ fi
 # in the file whose whole subject is that class. Corrected here rather than left to be read.)
 scan() {
   local needle="$1" out src err
-  err=$(mktemp) || { echo "SCAN FAILED - cannot create a temp file for stderr"; return 2; }
+  # >&2 is load-bearing: scan() is only ever called as `x=$(scan ...)`, so a bare echo here is
+  # captured into the variable and discarded on the `*) exit 2` path -- an ANONYMOUS rc=2, which
+  # is the one thing this file's header promises never to emit. Every other refusal in scan()
+  # already used >&2; this one did not, and no arm covers it.
+  err=$(mktemp) || { echo "SCAN FAILED - cannot create a temp file for stderr" >&2; return 2; }
   out=$(git grep -n "$needle" -- "$PATHSPEC" 2>"$err"); src=$?
   # ANY stderr refuses. NOT an allowlist of known message prefixes: git's wording is
   # version- and locale-dependent, and an enumeration that stops when it looks sufficient is the
