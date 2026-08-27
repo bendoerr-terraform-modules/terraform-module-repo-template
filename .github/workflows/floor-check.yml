@@ -51,6 +51,13 @@ jobs:
           # compared `!=` against the matrix pin, so a failed scan lands in the FAILURE branch
           # rather than the pass branch. That safety is a property of the following test, not of
           # this line - change the test and this becomes the fail-open shape.
+          #
+          # AND THESE TESTS NOW CARRY A SECOND DUTY THEY WERE NOT WRITTEN FOR, stated because it
+          # was picked up silently: they are this job's ONLY guard on the empty-checkout / wrong
+          # working-directory route. `grep -rn` over such a tree exits 1, so `all=""` and the
+          # decomposed scan below reads clean; what actually reds that world is `declared=` not
+          # matching the matrix pin, or `-z "$root"` firing. An unstated duty is one refactor from
+          # being dropped by someone who only reads what the test appears to be for.
           declared=$(grep -oE 'required_version *= *">= [0-9]+\.[0-9]+\.[0-9]+"' versions.tf | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)
           if [ "$declared" != "${{ matrix.tf }}" ]; then
             echo "::error::floor-check matrix pins ${{ matrix.tf }} but ${{ matrix.module }}/versions.tf declares >= ${declared:-<none>} — update the matrix to match the declared floor"
