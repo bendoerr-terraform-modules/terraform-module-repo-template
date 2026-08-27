@@ -113,6 +113,14 @@ scan() {
   # 📌 PRE-DECIDED, so a first-wave red is not answered in a hurry: if some repo legitimately emits
   # a benign `warning:`, the weakening is an EXPLICIT `^warning:` allowlist, not a revert of the
   # arm. Deciding that now, while nothing is red, is the point of writing it down.
+  # 🔴 AND IF THAT WEAKENING EVER SHIPS IT MUST CARRY `LC_ALL=C`. git's `fatal: `/`error: `/
+  # `warning: ` prefixes are gettext-wrapped (`usage.c` v2.43.0 :62/:82/:89), so a PREFIX match is
+  # locale-dependent and would silently stop matching on a runner that has git's .mo catalogues.
+  # The current arm is immune because it matches NO text at all -- it refuses on stderr being
+  # non-empty. That immunity is a property of the polarity, and it is exactly what the allowlist
+  # would give away. (kitten checked usage.c and refuted his own "prefixes are unlocalized"
+  # claim; Lilith found the box has zero .mo files, so the question is moot HERE and unmeasured on
+  # a hosted runner.)
   if [ -s "$err" ]; then
     echo "SCAN FAILED - 'git grep $needle' wrote to stderr, so it did not cleanly search the whole" >&2
     echo "  tree (rc=$src is NOT a reliable signal here: git grep's rc is computed over the files it" >&2
