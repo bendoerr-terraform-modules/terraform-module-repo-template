@@ -43,8 +43,14 @@ jobs:
         env:
           PAPERWORK_FINDINGS: ${{ runner.temp }}/paperwork-findings.txt
         run: |
+          # GitHub runs `run:` steps with `bash -eo pipefail {0}` unless a shell is declared,
+          # and `set -uo pipefail` does NOT clear an inherited `-e`. With a bare `cmd; rc=$?` the
+          # step dies on the scanner's rc=1 BEFORE the capture, so a real finding would red THIS
+          # step - "could not look" - and skip the evaluator entirely. That is the exact confusion
+          # the split exists to remove, and it lands on the COMMON case. `|| rc=$?` is `-e`-safe.
           set -uo pipefail
-          .github/scripts/paperwork-check.sh; rc=$?
+          rc=0
+          .github/scripts/paperwork-check.sh || rc=$?
           echo "rc=$rc" >> "$GITHUB_OUTPUT"
           # Enumerate the WHOLE space, never the complement of one value. A missing or
           # non-executable script returns 127, and `[ "$rc" -ne 2 ]` would let that exit 0 -
