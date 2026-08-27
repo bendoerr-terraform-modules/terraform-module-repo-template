@@ -90,7 +90,23 @@ if [ -z "$files" ]; then n=0; else n=$(printf '%s\n' "$files" | wc -l | tr -d ' 
 # header calls worse than no denominator, arriving by a route neither the stderr arm nor the
 # count catches. Unreachable from a fresh `actions/checkout`; reachable in the manual
 # `[repo-root]` mode and under any sparse or partial checkout.
-missing=$(git ls-files --deleted -- "$PATHSPEC" 2>/dev/null)
+# rc-MAPPED, not `2>/dev/null` with the status discarded. The first cut of THIS arm -- added an
+# hour ago, in the file whose header forswears exactly this -- swallowed stderr and never checked
+# the status, so an `ls-files` error collapsed to missing="" and the population arm silently did
+# not fire. The oldest class in the newest guard. (kitten, review 5041240974.)
+# ⚠️ AND THIS REFUSAL IS DEFENSIVE, NOT EXERCISED -- said out loud rather than left to read as
+#    tested. Both `ls-files` calls read the same index, and the census above runs first, so every
+#    world I could build that breaks one (measured: a corrupt GIT_INDEX_FILE -> rc=128) is caught
+#    by the census and never reaches here. A worktree stat failure does NOT make `--deleted` exit
+#    non-zero; it reports the path as deleted, which the arm below already handles. It stays
+#    because the alternative is the shape this file exists to abolish, but no arm covers it.
+mrc=0
+missing=$(git ls-files --deleted -- "$PATHSPEC") || mrc=$?
+if [ "$mrc" -ne 0 ]; then
+  echo "SCAN FAILED - 'git ls-files --deleted -- $PATHSPEC' exited $mrc; the population could not"
+  echo "  be checked, so the denominator cannot be trusted and this is NOT a clean result"
+  exit 2
+fi
 if [ -n "$missing" ]; then
   echo "POPULATION MISMATCH - $(printf '%s\n' "$missing" | wc -l | tr -d ' ') tracked file(s) are"
   echo "  counted by the census but cannot be stat'd in the worktree - deleted, or sitting under a"
