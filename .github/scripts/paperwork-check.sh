@@ -23,6 +23,19 @@
 # `fatal: not a git repository` TWICE, then printed `paperwork ok`, and exited 0. Never silent --
 # GREEN, and nobody reads a green job's log.
 #
+# 🔴 THE DENOMINATOR IS NECESSARY AND NOT SUFFICIENT, and this is the sharpest thing measured all
+# morning (Lilith, 2026-08-27, refuting her own control): `git ls-files` reads the INDEX and
+# `git grep` reads the FILESYSTEM. They are TWO POPULATIONS. With one tracked file unreadable and
+# a needle planted only inside it, the count-only form printed
+#     clean over 4 files
+# over a set that had three readable members -- a confident verdict with a correct-looking
+# denominator. ⇒ WORSE THAN NO DENOMINATOR: a bare "clean" invites "clean over what?"; a wrong
+# "clean over 4 files" ANSWERS that question. That is why the stderr arm above, not the count, is
+# what closes this. CENSUS UNIT != REMEDIATION UNIT.
+# (The obvious structural alternative -- compare `ls-files` against `grep -l ''` -- was built and
+# REFUTED before adoption: an empty tracked file is legitimately absent from `grep -l ''`, so a
+# bare count-comparison reds a clean tree.)
+#
 # WHY THE DENOMINATOR EXISTS. `rc=1` does not mean clean. Measured, three worlds, byte-identical
 # output and byte-identical rc:  genuine clean n=1 rc=1 · empty checkout n=0 rc=1 · wrong
 # working-directory n=0 rc=1.  A scanner that will not print its denominator has not told you it
@@ -86,13 +99,20 @@ scan() {
   local needle="$1" out src err
   err=$(mktemp) || { echo "SCAN FAILED - cannot create a temp file for stderr"; return 2; }
   out=$(git grep -n "$needle" -- "$PATHSPEC" 2>"$err"); src=$?
-  if grep -qE '^(error|fatal):' "$err"; then
-    echo "SCAN FAILED - 'git grep $needle' could not read part of the tree (rc=$src, which is NOT" >&2
-    echo "  a reliable signal here); a path the scanner could not read is not a path it cleared:" >&2
+  # ANY stderr refuses. NOT an allowlist of known message prefixes: git's wording is
+  # version- and locale-dependent, and an enumeration that stops when it looks sufficient is the
+  # whole failure class this file exists for. A scanner that said something unexpected has not
+  # demonstrated it read everything.
+  # FALSE-ALARM COST MEASURED before adopting this, on real subjects rather than reasoned about:
+  # 4 healthy repos x 2 needles = 6 invocations, stderr **0 bytes** every time.
+  if [ -s "$err" ]; then
+    echo "SCAN FAILED - 'git grep $needle' wrote to stderr, so it did not cleanly search the whole" >&2
+    echo "  tree (rc=$src is NOT a reliable signal here: git grep's rc is computed over the files it" >&2
+    echo "  SUCCESSFULLY READ, so unreadable paths drop out of the population silently and rc" >&2
+    echo "  reports on the shrunken set). A path the scanner could not read is not a path it cleared:" >&2
     sed 's/^/    /' "$err" >&2
     rm -f "$err"; return 2
   fi
-  [ -s "$err" ] && sed 's/^/  note: /' "$err" >&2
   rm -f "$err"
   case "$src" in
     0) printf '%s\n' "$out"; return 0 ;;
