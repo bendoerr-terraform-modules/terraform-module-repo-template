@@ -53,6 +53,10 @@ require_unreadable() {
 }
 
 # <label> <dir> <want-rc> <want-verdict-substring> [<want-findings: empty|nonempty|any>]
+# ⚠️ THE SUBSTRING MUST DISCRIMINATE WHICH REFUSAL FIRED, not merely that one did. Four arms once
+# asserted only "SCAN FAILED" and would each have passed on any of the others' causes -- including
+# the never-exercised `*)` branch. A shared verdict substring makes N arms into one arm run N
+# times. Needles below are the distinguishing clause of each cause.
 arm() {
   local label="$1" dir="$2" want="$3" needle="$4" wantf="${5:-any}" out rc f
   RAN=$((RAN+1))
@@ -87,10 +91,10 @@ arm "self-reference remains"  "$TMP/selfref"   1 "FINDINGS"                nonem
 
 # 4. the scan cannot run -> 2. Before 2026-08-27 this returned 0 and printed "paperwork ok".
 mkdir -p "$TMP/notrepo"; printf 'TEMPLATE_TODO_x\n' > "$TMP/notrepo/README.md"
-arm "not a git repository"    "$TMP/notrepo"   2 "SCAN FAILED"
+arm "not a git repository"    "$TMP/notrepo"   2 "git ls-files"
 
 # 5. no such root -> 2, a second independent route into the refusal
-arm "no such directory"       "$TMP/nope"      2 "SCAN FAILED"
+arm "no such directory"       "$TMP/nope"      2 "cannot enter"
 
 # 6. THE DENOMINATOR ARM: an empty checkout scans zero files. `git grep` returns rc=1 here --
 #    byte-identical to a genuine clean -- so nothing but the denominator separates them.
@@ -112,25 +116,36 @@ mkrepo "$TMP/unreadable"; printf 'TEMPLATE_TODO_x\n' > "$TMP/unreadable/README.m
 printf 'plain\n' > "$TMP/unreadable/other.md"; seal "$TMP/unreadable"
 chmod 000 "$TMP/unreadable/README.md"
 require_unreadable "$TMP/unreadable/README.md"
-arm "unreadable tracked file"  "$TMP/unreadable" 2 "SCAN FAILED"
+arm "unreadable tracked file"  "$TMP/unreadable" 2 "wrote to stderr"
 chmod 644 "$TMP/unreadable/README.md" 2>/dev/null
 
-# 9. AN UNREADABLE TRACKED SUBDIRECTORY -- worse: git grep exits **0** having silently omitted the
-#    subtree, so it reports other matches and looks entirely healthy.
+# 9. AN UNREADABLE TRACKED SUBDIRECTORY. git grep exits **0** having silently omitted the subtree.
+#    ⚠️ It refuses at the POPULATION arm, not the stderr arm, and that is measured rather than
+#    assumed: `chmod 000` on a DIRECTORY blocks stat of its children, so `ls-files --deleted`
+#    flags them first. A chmod'd FILE (arm 8) stats fine and reaches the stderr arm instead.
+#    Two unreadable worlds, two different refusals, and only running them shows which.
 mkrepo "$TMP/unreadsub"; mkdir -p "$TMP/unreadsub/sub"
 printf 'plain\n' > "$TMP/unreadsub/top.md"
 printf 'TEMPLATE_TODO_hidden\n' > "$TMP/unreadsub/sub/deep.md"; seal "$TMP/unreadsub"
 chmod 000 "$TMP/unreadsub/sub"
 require_unreadable "$TMP/unreadsub/sub/deep.md"
-arm "unreadable tracked subdir" "$TMP/unreadsub" 2 "SCAN FAILED"
+arm "unreadable tracked subdir" "$TMP/unreadsub" 2 "POPULATION MISMATCH"
 chmod 755 "$TMP/unreadsub/sub" 2>/dev/null
 
-FLOOR=9
+# 10. POPULATION MISMATCH: tracked file deleted from the worktree. Counted by the census, never
+#     searched by git grep, and NO stderr -- so neither the count nor the stderr arm sees it.
+mkrepo "$TMP/deleted"; printf 'TEMPLATE_TODO_x\n' > "$TMP/deleted/README.md"
+printf 'plain\n' > "$TMP/deleted/other.md"; seal "$TMP/deleted"
+rm -f "$TMP/deleted/README.md"
+arm "tracked file deleted"    "$TMP/deleted"   2 "POPULATION MISMATCH"
+
+FLOOR=10
 if [ "$RAN" -ne "$FLOOR" ]; then
   echo "SELFTEST FAILED - only $RAN of $FLOOR arms ran; a stage went quiet"; exit 1
 fi
 if [ "$FAILED" -ne 0 ]; then
   echo "SELFTEST FAILED - the paperwork gate does not honour its exit contract"; exit 1
 fi
-echo "SELFTEST PASS - $RAN arms, 4 distinct verdicts (CLEAN / FINDINGS / SCAN FAILED / NOTHING SCANNED)"
+echo "SELFTEST PASS - $RAN arms; causes discriminated: CLEAN / FINDINGS / cannot-enter /"
+echo "  stderr-written / NOTHING SCANNED / POPULATION MISMATCH"
 exit 0

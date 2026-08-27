@@ -61,12 +61,24 @@ jobs:
             *) echo "::error::paperwork scanner exited $rc - it did not run (missing? not executable?)"; exit 1 ;;
           esac
       - name: "Template paperwork done?"
-        if: steps.scan.outputs.rc == '0' || steps.scan.outputs.rc == '1'
+        # `always() && conclusion == success` rather than keying on the output STRING: were the
+        # output ever not surfaced, an `rc == '0' || rc == '1'` condition SKIPS this step while
+        # the scan step exited 0 - so the job goes green having evaluated nothing. That is the
+        # same "skipped reads as non-failing" hole the selftest job exists to close, one step
+        # down. The unexpected-value branch inside the step is the other half.
+        if: always() && steps.scan.conclusion == 'success'
         env:
           PAPERWORK_FINDINGS: ${{ runner.temp }}/paperwork-findings.txt
           RC: ${{ steps.scan.outputs.rc }}
         run: |
           set -uo pipefail
+          case "$RC" in
+            0 | 1) ;;
+            *)
+              echo "::error::scan step succeeded but reported rc='$RC' - the handoff is broken"
+              exit 1
+              ;;
+          esac
           # THE HANDOFF IS ASSERTED, NOT TRUSTED. A scanner that greens without writing its
           # paperwork hands this step nothing, and green + green is the hole. Both halves would
           # now have to lie in agreement.
@@ -124,7 +136,15 @@ jobs:
           # Two changes: DERIVE the pathspec from the script instead of keeping a second copy of
           # it here, and run a POSITIVE CONTROL first - if the needle is not findable under
           # .github/ at all, the assertion below is vacuous and must say so rather than pass.
-          PS=$(sed -n "s/^PATHSPEC='\(.*\)'$/\1/p" .github/scripts/paperwork-check.sh)
+          # `|| rc=$?`, not a bare assignment: GitHub's shell carries `-e`, so a missing or
+          # unreadable script makes sed exit non-zero and the step dies BEFORE the named error
+          # below - an anonymous red, in the guard whose whole purpose is a named one.
+          rc=0
+          PS=$(sed -n "s/^PATHSPEC='\(.*\)'$/\1/p" .github/scripts/paperwork-check.sh) || rc=$?
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::could not read paperwork-check.sh to derive its pathspec (sed rc=$rc)"
+            exit 1
+          fi
           if [ -z "$PS" ]; then
             echo "::error::could not derive PATHSPEC from paperwork-check.sh - this guard cannot run"
             exit 1

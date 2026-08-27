@@ -62,7 +62,12 @@
 set -uo pipefail
 
 ROOT="${1:-.}"
-OUT="${PAPERWORK_FINDINGS:-paperwork-findings.txt}"
+# 🔴 THE DEFAULT MUST NOT LIVE INSIDE THE SCANNED TREE. It used to be `./paperwork-findings.txt`,
+# and the file embeds BOTH needles verbatim. Measured: run the gate locally in a descendant, fix
+# the checklist, `git add -A`, and the gate reds FOREVER -- on its own artifact
+# (`paperwork-findings.txt:4`). A guard that cannot go green after the fault is fixed is worse than
+# one that never fired. Default now lands in TMPDIR; CI passes `${{ runner.temp }}` explicitly.
+OUT="${PAPERWORK_FINDINGS:-${TMPDIR:-/tmp}/paperwork-findings.txt}"
 case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac   # resolve BEFORE cd, or it lands in $ROOT
 
 cd "$ROOT" 2>/dev/null || { echo "SCAN FAILED - cannot enter '$ROOT'"; exit 2; }
@@ -77,6 +82,25 @@ if [ "$rc" -ne 0 ]; then
   exit 2
 fi
 if [ -z "$files" ]; then n=0; else n=$(printf '%s\n' "$files" | wc -l | tr -d ' '); fi
+# 🔴 POPULATION MISMATCH -- the third route, and the stderr arm does NOT cover it.
+# `git ls-files` reads the INDEX; `git grep` reads the WORKTREE. A tracked file deleted from the
+# worktree is COUNTED in n and silently NOT SEARCHED, and git grep writes nothing to stderr.
+# Measured: 2 tracked files, README.md deleted, needle inside it -> `CLEAN - scanned 2 file(s)`,
+# rc=0. That is precisely the "confident verdict carrying a correct-looking denominator" this
+# header calls worse than no denominator, arriving by a route neither the stderr arm nor the
+# count catches. Unreachable from a fresh `actions/checkout`; reachable in the manual
+# `[repo-root]` mode and under any sparse or partial checkout.
+missing=$(git ls-files --deleted -- "$PATHSPEC" 2>/dev/null)
+if [ -n "$missing" ]; then
+  echo "POPULATION MISMATCH - $(printf '%s\n' "$missing" | wc -l | tr -d ' ') tracked file(s) are"
+  echo "  counted by the census but cannot be stat'd in the worktree - deleted, or sitting under a"
+  echo "  directory this process cannot traverse. Either way they are NOT searched and the"
+  echo "  denominator would be a lie. (git ls-files --deleted stats; it cannot tell absent from"
+  echo "  unreadable, and this verdict deliberately claims only what it measured.) Offenders:"
+  printf '%s\n' "$missing" | sed 's/^/    /'
+  exit 2
+fi
+
 if [ "$n" -eq 0 ]; then
   echo "NOTHING SCANNED - pathspec '$PATHSPEC' matched 0 files. This is NOT a clean result: a green"
   echo "  over an empty set is vacuous. Check the checkout, the working-directory and the pathspec."
