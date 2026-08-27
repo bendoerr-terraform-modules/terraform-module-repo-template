@@ -34,7 +34,23 @@ FAILED=0; RAN=0
 mkrepo() { mkdir -p "$1"; git -C "$1" init -q .
            git -C "$1" config user.email selftest@example.invalid
            git -C "$1" config user.name  selftest; }
-seal()   { git -C "$1" add -A; git -C "$1" commit -qm fixture >/dev/null 2>&1; }
+# seal() must fail LOUDLY. Swallowing (e.g. a gpgsign failure in a fixture repo) would surface
+# two steps later as a NOTHING SCANNED verdict, a long way from its cause.
+seal() {
+  git -C "$1" add -A || { echo "NOT MEASURED - could not stage fixture in $1"; exit 1; }
+  git -C "$1" -c commit.gpgsign=false commit -qm fixture >/dev/null \
+    || { echo "NOT MEASURED - could not commit fixture in $1"; exit 1; }
+}
+# A fixture that did not reach its intended state proves nothing. chmod is a no-op for root, so
+# under a root runner arms 8 and 9 would pass while testing NOTHING. Assert the world was built.
+# (The fixture builder decides which worlds can exist, and nobody tests the builder.)
+require_unreadable() {
+  if [ -r "$1" ]; then
+    echo "NOT MEASURED - '$1' is still readable after chmod 000 (running as root?); the fixture"
+    echo "  for the unreadable-path arms was NOT built, so those arms would prove nothing."
+    exit 1
+  fi
+}
 
 # <label> <dir> <want-rc> <want-verdict-substring> [<want-findings: empty|nonempty|any>]
 arm() {
@@ -95,6 +111,7 @@ arm "everything excluded"     "$TMP/onlygithub" 2 "NOTHING SCANNED"
 mkrepo "$TMP/unreadable"; printf 'TEMPLATE_TODO_x\n' > "$TMP/unreadable/README.md"
 printf 'plain\n' > "$TMP/unreadable/other.md"; seal "$TMP/unreadable"
 chmod 000 "$TMP/unreadable/README.md"
+require_unreadable "$TMP/unreadable/README.md"
 arm "unreadable tracked file"  "$TMP/unreadable" 2 "SCAN FAILED"
 chmod 644 "$TMP/unreadable/README.md" 2>/dev/null
 
@@ -104,6 +121,7 @@ mkrepo "$TMP/unreadsub"; mkdir -p "$TMP/unreadsub/sub"
 printf 'plain\n' > "$TMP/unreadsub/top.md"
 printf 'TEMPLATE_TODO_hidden\n' > "$TMP/unreadsub/sub/deep.md"; seal "$TMP/unreadsub"
 chmod 000 "$TMP/unreadsub/sub"
+require_unreadable "$TMP/unreadsub/sub/deep.md"
 arm "unreadable tracked subdir" "$TMP/unreadsub" 2 "SCAN FAILED"
 chmod 755 "$TMP/unreadsub/sub" 2>/dev/null
 

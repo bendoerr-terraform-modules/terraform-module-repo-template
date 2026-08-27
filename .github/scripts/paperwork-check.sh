@@ -93,8 +93,10 @@ fi
 #                                   omitted the whole subtree while reporting other matches.
 # ⇒ git grep's exit code does not reflect PER-PATH read failures at all. The only signal is stderr.
 # Neither the rc map nor the denominator catches this: n counts the unreadable file just fine.
-# So stderr is part of the verdict. `error:`/`fatal:` refuse; `warning:` is passed through to the
-# log without refusing, because git emits benign ones (e.g. missing .gitattributes in a subtree).
+# So stderr is part of the verdict, and ANY non-empty stderr refuses -- including `warning:`.
+# (An earlier revision of this comment said warnings were passed through, and it survived one
+# commit past the code that stopped doing so: prose defending a behaviour the code no longer had,
+# in the file whose whole subject is that class. Corrected here rather than left to be read.)
 scan() {
   local needle="$1" out src err
   err=$(mktemp) || { echo "SCAN FAILED - cannot create a temp file for stderr"; return 2; }
@@ -104,7 +106,13 @@ scan() {
   # whole failure class this file exists for. A scanner that said something unexpected has not
   # demonstrated it read everything.
   # FALSE-ALARM COST MEASURED before adopting this, on real subjects rather than reasoned about:
-  # 4 healthy repos x 2 needles = 6 invocations, stderr **0 bytes** every time.
+  # 6 invocations over 4 healthy repos (2 repos x 2 needles + 2 repos x 1), stderr 0 bytes every
+  # time. State the count exactly: "4 repos x 2 needles" would be 8, and I ran 6.
+  # ⚠️ SCOPE: 4 of the 9 fleet repos. The other 5 answer for themselves when each one's selftest
+  # first runs -- that is what the per-repo control is for.
+  # 📌 PRE-DECIDED, so a first-wave red is not answered in a hurry: if some repo legitimately emits
+  # a benign `warning:`, the weakening is an EXPLICIT `^warning:` allowlist, not a revert of the
+  # arm. Deciding that now, while nothing is red, is the point of writing it down.
   if [ -s "$err" ]; then
     echo "SCAN FAILED - 'git grep $needle' wrote to stderr, so it did not cleanly search the whole" >&2
     echo "  tree (rc=$src is NOT a reliable signal here: git grep's rc is computed over the files it" >&2

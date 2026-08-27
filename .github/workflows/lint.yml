@@ -115,10 +115,23 @@ jobs:
           # LOAD-BEARING: paperwork-check.sh contains the needles it searches for, and is safe only
           # because ':!.github' excludes it. If that ever stops being true the gate matches its own
           # definition and fails forever. This was a stated constraint with nothing verifying it.
-          hits=$(git grep -l 'TEMPLATE_TODO_' -- ':!.github' | grep '^\.github/' | grep -c . || true)
-          if [ "$hits" -ne 0 ]; then
+          # This guard had the very defect it guards against: `... | grep -c . || true` made a
+          # git grep ERROR (prints nothing) indistinguishable from a clean result (also nothing),
+          # so the exclusion check went green while unmeasured. rc-map the stage that touches the
+          # filesystem; the filter stage reads a variable and cannot fail.
+          rc=0
+          listed=$(git grep -l 'TEMPLATE_TODO_' -- ':!.github') || rc=$?
+          case "$rc" in
+            0 | 1) ;;
+            *)
+              echo "::error::the exclusion check could not run (git grep rc=$rc) - this is NOT a pass"
+              exit 1
+              ;;
+          esac
+          inside=$(printf '%s\n' "$listed" | grep '^\.github/') || true
+          if [ -n "$inside" ]; then
             echo "::error::the ':!.github' exclusion no longer holds - the paperwork scripts are inside their own search scope"
-            git grep -l 'TEMPLATE_TODO_' -- ':!.github' | grep '^\.github/'
+            printf '%s\n' "$inside"
             exit 1
           fi
           echo "exclusion holds: no .github/ path is inside the gate's own scope"
